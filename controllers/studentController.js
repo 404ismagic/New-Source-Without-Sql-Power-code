@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongoose').Types;
-const { Student, Course } = require('../models');
+const { Student, User } = require('../models');
 
 // Aggregate function to get the number of students overall
 const headCount = async () =>
@@ -62,22 +62,22 @@ module.exports = {
       .then((student) => res.json(student))
       .catch((err) => res.status(500).json(err));
   },
-  // Delete a student and remove them from the course
+  // Delete a student and remove them from the user
   deleteStudent(req, res) {
     Student.findOneAndRemove({ _id: req.params.studentId })
       .then((student) =>
         !student
           ? res.status(404).json({ message: 'No such student exists' })
-          : Course.findOneAndUpdate(
+          : User.findOneAndUpdate(
               { students: req.params.studentId },
               { $pull: { students: req.params.studentId } },
               { new: true }
             )
       )
-      .then((course) =>
-        !course
+      .then((user) =>
+        !user
           ? res.status(404).json({
-              message: 'Student deleted, but no courses found',
+              message: 'Student deleted, but no users found',
             })
           : res.json({ message: 'Student successfully deleted' })
       )
