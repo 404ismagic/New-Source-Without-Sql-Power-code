@@ -7,6 +7,22 @@ module.exports = {
       .then((users) => res.json(users))
       .catch((err) => res.status(500).json(err));
   },
+  deleteFriend(req, res) {
+    User.findOneAndUpdate ({ _id: req.params.userId },
+      {$pull:{friends:req.params.friendId}},
+      {new:true,runValidators:true}
+      )
+      .then((users) => res.json(users))
+      .catch((err) => res.status(500).json(err));
+  },
+  postFriend(req, res) {
+    User.findOneAndUpdate ({ _id: req.params.userId },
+      {$push:{friends:req.params.friendId}},
+      {new:true,runValidators:true}
+      )
+      .then((users) => res.json(users))
+      .catch((err) => res.status(500).json(err));
+  },
   // Get a user
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
